@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.contrib.auth.decorators import login_required
 import calendar
 
 from .models import *
@@ -46,7 +47,21 @@ def next_month(d):
     month = 'month=' + str(next_month.year) + '-' + str(next_month.month)
     return month
 
+# Eduardo Ceratti
+def day_detail(request, day):
+
+    dayformat = datetime.strptime(day, '%Y-%m-%d')
+    calendar = Calendar(dayformat.year, dayformat.month, dayformat.day)
+    
+    calendar.formatdaydetail()
+
+    print('dia eh: ' + day)
+
+    return render(request, 'cal/detail.html')
+
+@login_required(login_url="/login/")
 def event(request, event_id=None):
+    print('Entrou')
     instance = Event()
     if event_id:
         instance = get_object_or_404(Event, pk=event_id)

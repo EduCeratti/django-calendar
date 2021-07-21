@@ -2,12 +2,15 @@ from django.db import models
 from django.urls import reverse
 
 class Event(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    titulo = models.CharField(max_length=200)
+    resumo = models.TextField()
+    data_inicio = models.DateTimeField()
+    data_fim = models.DateTimeField()
 
     @property
     def get_html_url(self):
         url = reverse('cal:event_edit', args=(self.id,))
-        return f'<a href="{url}"> {self.title} </a>'
+        
+        # Eduardo Ceratti - Date with Hour
+        init_date = self.data_inicio.strftime("%H:%M")
+        return f'<a href="{url}"> {init_date} - {self.titulo} </a>'
